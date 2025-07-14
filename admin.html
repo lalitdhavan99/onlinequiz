@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Quiz System - Admin Dashboard</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" crossorigin="anonymous"/>
+  <style>
+    body { margin: 0; display: flex; font-family: Arial, sans-serif; }
+    .side-nav {
+      width: 220px; background-color: #2c3e50; color: white;
+      min-height: 100vh; padding-top: 20px; text-align: center;
+    }
+    .side-nav img {
+      width: 80px;
+      height: auto;
+      margin-bottom: 10px;
+    }
+    .side-nav h2 {
+      margin-bottom: 20px; cursor: pointer;
+    }
+    .side-nav ul { list-style: none; padding: 0; text-align: left; }
+    .side-nav li { padding: 15px 20px; cursor: pointer; }
+    .side-nav li:hover { background-color: #34495e; }
+    .side-nav i { margin-right: 10px; }
+    .logout {
+      margin: 20px; padding: 10px; width: calc(100% - 40px); background-color: #e74c3c;
+      color: white; border: none; cursor: pointer;
+    }
+    .logout:hover { background-color: #c0392b; }
+    .main-content { flex-grow: 1; padding: 30px; background-color: #f4f4f4; }
+    .dashboard { display: flex; gap: 20px; flex-wrap: wrap; margin-top: 20px; }
+    .card {
+      flex: 1 1 200px; background: white; padding: 20px; border-radius: 10px;
+      box-shadow: 0 0 5px rgba(0, 0, 0, 0.1); text-align: center;
+    }
+    .card h3 { margin-bottom: 10px; color: #2c3e50; }
+    .container, #user-table, #question-count, .dashboard, #subjectForm, #questionForm {
+      display: none;
+    }
+    .container {
+      margin: auto; background: white; padding: 20px; border-radius: 10px;
+      max-width: 800px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+    .container h1 { margin-bottom: 20px; }
+    .container form {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 15px;
+    }
+    .container form label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: bold;
+    }
+    .container input, .container button, .container select {
+      padding: 10px; font-size: 16px; width: 100%;
+    }
+    .container button {
+      background-color: #27ae60; color: white; border: none; cursor: pointer;
+    }
+    .container button:hover { background-color: #219150; }
+    table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+    th, td { border: 1px solid #ccc; padding: 10px; text-align: left; }
+    .action-btn {
+      padding: 5px 10px; background-color: crimson; color: white;
+      border: none; cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <div class="side-nav">
+    <img src="logo1.png" alt="Logo" />
+    <h2 onclick="showDashboard()">Quiz Admin</h2>
+    <ul>
+      <li onclick="toggleSubjectForm()"><i class="fa fa-book"></i>Add Subject</li>
+      <li onclick="loadUsers()"><i class="fa fa-users"></i>User Details</li>
+      <li onclick="loadQuestionCount()"><i class="fa fa-list-ol"></i>Question Count</li>
+      <li onclick="loadQuestions()"><i class="fa fa-question-circle"></i>Manage Questions</li>
+    </ul>
+    <button class="logout" onclick="logout()">Logout</button>
+  </div>
+
+  <div class="main-content">
+    <h1>Admin Dashboard</h1>
+    <p>Welcome to the Quiz System Admin Panel.</p>
+
+    <div class="dashboard" id="dashboard">
+      <div class="card"><h3>Total Users</h3><p id="userCount">--</p></div>
+      <div class="card"><h3>Total Quizzes</h3><p id="quizCount">--</p></div>
+      <div class="card"><h3>Active Teachers</h3><p>1</p></div>
+    </div>
+
+    <div class="container" id="subjectForm">
+      <h1>Add Subject</h1>
+      <form id="addSubjectForm">
+        <input type="text" name="title" placeholder="Subject Title" required />
+        <button type="submit">Add Subject</button>
+      </form>
+    </div>
+
+    <div class="container" id="questionForm">
+      <h1 style="text-align:center; color:#2c3e50;">Add New Question</h1>
+      <form id="addQuestionForm">
+        <div style="grid-column: span 2;">
+          <label>Subject</label>
+          <select name="quiz_id" required id="quizSelector">
+            <option value="">Select Subject</option>
+          </select>
+        </div>
+        <div style="grid-column: span 2;">
+          <label>Question</label>
+          <input type="text" name="question_text" placeholder="Enter question" required />
+        </div>
+        <div>
+          <label>Option A</label>
+          <input type="text" name="option_a" placeholder="Option A" required />
+        </div>
+        <div>
+          <label>Option B</label>
+          <input type="text" name="option_b" placeholder="Option B" required />
+        </div>
+        <div>
+          <label>Option C</label>
+          <input type="text" name="option_c" placeholder="Option C" required />
+        </div>
+        <div>
+          <label>Option D</label>
+          <input type="text" name="option_d" placeholder="Option D" required />
+        </div>
+        <div>
+          <label>Correct Option</label>
+          <select name="correct_option" required>
+            <option value="">Select Correct Option</option>
+            <option value="A">Option A</option>
+            <option value="B">Option B</option>
+            <option value="C">Option C</option>
+            <option value="D">Option D</option>
+          </select>
+        </div>
+        <div>
+          <label>Time Limit (seconds)</label>
+          <input type="number" name="time_limit" placeholder="e.g. 30" required />
+        </div>
+        <div style="grid-column: span 2; text-align: center;">
+          <button type="submit">Add Question</button>
+        </div>
+      </form>
+
+      <h2 style="margin-top: 40px; color:#2c3e50;">All Questions</h2>
+      <div id="questionTable" style="margin-top: 15px;"></div>
+    </div>
+
+    <div id="user-table"></div>
+
+    <div id="question-count">
+      <h2>Total Questions: <span id="count-value"></span></h2>
+    </div>
+  </div>
+
+  <script>
+    function showDashboard() {
+      hideAll();
+      document.getElementById("dashboard").style.display = "flex";
+      fetch("question_count.php").then(res => res.text()).then(data => {
+        document.getElementById("quizCount").innerText = data;
+      });
+      fetch("user_count.php").then(res => res.text()).then(data => {
+        document.getElementById("userCount").innerText = data;
+      });
+    }
+    function toggleSubjectForm() {
+      hideAll();
+      document.getElementById("subjectForm").style.display = "block";
+    }
+    function loadUsers() {
+      hideAll();
+      fetch('get_users.php')
+        .then(response => response.text())
+        .then(data => {
+          document.getElementById("user-table").innerHTML = data;
+          document.getElementById("user-table").style.display = "block";
+        });
+    }
+    function loadQuestionCount() {
+      hideAll();
+      fetch('question_count.php')
+        .then(res => res.text())
+        .then(count => {
+          document.getElementById("count-value").innerText = count;
+          document.getElementById("question-count").style.display = "block";
+        });
+    }
+  function loadQuestions() {
+  hideAll();
+  document.getElementById("questionForm").style.display = "block";
+
+  // Load quizzes into selector dropdown
+  fetch('get_quizzes.php')
+    .then(res => res.json())
+    .then(quizzes => {
+      const selector = document.getElementById("quizSelector");
+      selector.innerHTML = `<option value="">Select Subject</option>` + quizzes.map(q => `<option value="${q.id}">${q.title}</option>`).join('');
+    });
+
+  // Load question list from new PHP file question_list.php
+  fetch('question_list.php')
+    .then(res => res.text())
+    .then(html => {
+      document.getElementById("questionTable").innerHTML = html;
+    });
+
+      fetch('get_questions.php')
+        .then(res => res.text())
+        .then(html => {
+          document.getElementById("questionTable").innerHTML = html;
+        });
+    }
+    function deleteQuestion(id) {
+      if (confirm("Delete this question?")) {
+        fetch(`delete_question.php?id=${id}`).then(() => loadQuestions());
+      }
+    }
+    document.getElementById("addSubjectForm").addEventListener("submit", function(e) {
+      e.preventDefault();
+      const formData = new FormData(this);
+      fetch("add_subject.php", {
+        method: "POST",
+        body: formData
+      }).then(res => res.text()).then(msg => {
+        alert(msg); this.reset(); loadQuestions();
+      });
+    });
+    document.getElementById("addQuestionForm").addEventListener("submit", function(e) {
+      e.preventDefault();
+      const formData = new FormData(this);
+      fetch("add_question.php", {
+        method: "POST",
+        body: formData
+      }).then(res => res.text()).then(msg => {
+        alert(msg); loadQuestions();
+      });
+    });
+    function logout() {
+      window.location.href = "login.html";
+    }
+    function hideAll() {
+      document.getElementById("subjectForm").style.display = "none";
+      document.getElementById("questionForm").style.display = "none";
+      document.getElementById("user-table").style.display = "none";
+      document.getElementById("question-count").style.display = "none";
+      document.getElementById("dashboard").style.display = "none";
+    }
+    window.onload = () => {
+      hideAll(); showDashboard();
+    };
+  </script>
+</body>
+</html>

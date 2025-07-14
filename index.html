@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Quiz App - Home</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" rel="stylesheet">
+  <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+  <style>
+    :root {
+      --bg-light: #f9f9f9;
+      --bg-dark: #121212;
+      --text-light: #000;
+      --text-dark: #fff;
+      --accent: #e91e63;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      transition: background 0.4s, color 0.4s;
+      background: var(--bg-dark);
+      color: var(--text-dark);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    body.light-mode {
+      background: var(--bg-light);
+      color: var(--text-light);
+    }
+
+    header {
+      background: rgba(0, 0, 0, 0.6);
+      backdrop-filter: blur(10px);
+      padding: 15px 30px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: fixed;
+      top: 0;
+      width: 100%;
+      z-index: 1000;
+    }
+
+    body.light-mode header {
+      background: rgba(255, 255, 255, 0.8);
+    }
+
+    .logo-img {
+      width: 50px;
+    }
+
+    nav ul {
+      list-style: none;
+      display: flex;
+      gap: 25px;
+    }
+
+    nav ul li a {
+      color: inherit;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 18px;
+      position: relative;
+    }
+
+    nav ul li a.active,
+    nav ul li a:hover {
+      font-weight: 700;
+      color: var(--accent);
+      font-size: 20px;
+    }
+
+    main {
+      padding-top: 100px;
+      flex: 1;
+      position: relative;
+    }
+
+    #home {
+      background: url("quiz.png") center/cover no-repeat;
+      background-attachment: fixed; /* Prevents scrolling of background */
+      color: white;
+      padding: 80px 20px;
+      text-align: center;
+      position: relative;
+      height: 100vh;
+      overflow: hidden;
+      filter: brightness(1.8);
+    }
+
+    #home::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(to bottom right, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.7));
+      z-index: 0;
+    }
+
+    #home * {
+      position: relative;
+      z-index: 1;
+    }
+
+    body.light-mode #home {
+      color: black;
+    }
+
+    h1 {
+      font-size: 48px;
+      margin-bottom: 10px;
+      text-shadow: 0 0 10px #e91e63;
+    }
+
+    .hero-subtext {
+      font-size: 18px;
+      max-width: 700px;
+      margin: 0 auto 30px;
+    }
+
+    section {
+      padding: 30px;
+      max-width: 800px;
+      margin: 30px auto;
+      background-color: rgba(255, 255, 255, 0.05);
+      border-radius: 10px;
+      display: none;
+    }
+
+    body.light-mode section {
+      background-color: rgba(0, 0, 0, 0.05);
+    }
+
+    section.active {
+      display: block;
+    }
+
+    section h2 {
+      font-size: 28px;
+      margin-bottom: 10px;
+    }
+
+    section p {
+      font-size: 18px;
+      line-height: 1.6;
+    }
+
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+
+    input, textarea {
+      padding: 12px;
+      border: none;
+      border-radius: 6px;
+      font-size: 16px;
+      width: 100%;
+    }
+
+    button {
+      padding: 12px;
+      background: var(--accent);
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #d81b60;
+    }
+
+    .theme-toggle {
+      cursor: pointer;
+      font-size: 20px;
+    }
+
+    footer {
+      background: #222;
+      color: white;
+      padding: 10px 20px;
+      text-align: center;
+      position: fixed;
+      bottom: 0;
+      width: 100%;
+    }
+
+    .social-icons {
+      display: flex;
+      gap: 15px;
+      font-size: 20px;
+      justify-content: center;
+      margin-bottom: 10px;
+    }
+
+    .toast {
+      position: fixed;
+      bottom: 80px;
+      right: 30px;
+      background: #28a745;
+      color: white;
+      padding: 12px 20px;
+      border-radius: 6px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.5s ease;
+    }
+
+    .toast.show {
+      opacity: 1;
+      pointer-events: all;
+    }
+
+    @media (max-width: 768px) {
+      h1 { font-size: 32px; }
+      nav ul { flex-direction: column; gap: 10px; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <img src="logo1.png" alt="Quiz Logo" class="logo-img">
+  <nav>
+    <ul>
+      <li><a href="#" class="nav-link active" onclick="showSection('home')">Home</a></li>
+<li><a href="about.html" class="nav-link">About</a></li>
+      <li><a href="contact.html" class="nav-link">Contact</a></li>
+      <li><a href="login.html" class="nav-link">Login</a></li>
+    </ul>
+  </nav>
+  <span class="theme-toggle" onclick="toggleTheme()">🌙</span>
+</header>
+
+<main>
+  <div id="home">
+    <h1 data-aos="fade-up">Welcome to the Quiz App</h1>
+    <p class="hero-subtext" data-aos="fade-up" data-aos-delay="200">Test your knowledge with subject-wise quizzes. Learn, challenge, and improve!</p>
+  </div>
+
+  <section id="about" data-aos="fade-up">
+    <h2>About the Quiz App</h2>
+    <p>Our quiz platform enhances learning with interactive and fun quizzes. Track your scores, compete, and master subjects at your own pace!</p>
+  </section>
+
+  <section id="contact" data-aos="fade-up">
+    <h2>Contact Us</h2>
+    <form id="contactForm">
+      <input type="text" name="name" placeholder="Your Name" required />
+      <input type="email" name="email" placeholder="Your Email" required />
+      <textarea name="message" placeholder="Your Message" required rows="5"></textarea>
+      <button type="submit">Send Message</button>
+    </form>
+  </section>
+</main>
+
+<div class="toast" id="toast">Message sent successfully!</div>
+
+<footer>
+  <div class="social-icons">
+    <a href="#"><i class="fab fa-facebook-f" style="color:white;"></i></a>
+    <a href="#"><i class="fab fa-twitter" style="color:white;"></i></a>
+    <a href="#"><i class="fab fa-instagram" style="color:white;"></i></a>
+  </div>
+  <p>© 2025 Quiz App. All rights reserved.</p>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
+<script>
+  AOS.init({ duration: 1000 });
+
+  const toast = document.getElementById("toast");
+  const contactForm = document.getElementById("contactForm");
+
+  contactForm.addEventListener("submit", function (e) {
+    e.preventDefault();
+    const formData = new FormData(contactForm);
+
+    fetch("contact_submit.php", {
+      method: "POST",
+      body: formData
+    }).then(res => res.text()).then(data => {
+      toast.classList.add("show");
+      setTimeout(() => toast.classList.remove("show"), 3000);
+      contactForm.reset();
+    });
+  });
+
+  function toggleTheme() {
+    document.body.classList.toggle("light-mode");
+    document.querySelector(".theme-toggle").textContent =
+      document.body.classList.contains("light-mode") ? "☀️" : "🌙";
+  }
+
+  function toggleSection(id) {
+    document.querySelectorAll("section").forEach(section => {
+      if (section.id === id) {
+        section.classList.toggle("active");
+        section.scrollIntoView({ behavior: 'smooth' });
+      } else {
+        section.classList.remove("active");
+      }
+    });
+
+    document.querySelectorAll(".nav-link").forEach(link => {
+      link.classList.remove("active");
+      if (link.textContent.toLowerCase() === id) link.classList.add("active");
+    });
+  }
+
+  function showSection(id) {
+    document.querySelectorAll("section").forEach(section => section.classList.remove("active"));
+    document.querySelectorAll(".nav-link").forEach(link => {
+      link.classList.remove("active");
+      if (link.textContent.toLowerCase() === id) link.classList.add("active");
+    });
+  }
+</script>
+
+</body>
+</html>

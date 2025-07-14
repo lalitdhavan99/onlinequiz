@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Contact Us - Quiz App</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" rel="stylesheet">
+  <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+  <style>
+    :root {
+      --bg-light: #f9f9f9;
+      --bg-dark: #121212;
+      --text-light: #000;
+      --text-dark: #fff;
+      --accent: #e91e63;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: var(--bg-dark);
+      color: var(--text-dark);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      transition: background 0.4s, color 0.4s;
+    }
+
+    body.light-mode {
+      background: var(--bg-light);
+      color: var(--text-light);
+    }
+
+    header {
+      background: rgba(0, 0, 0, 0.6);
+      backdrop-filter: blur(10px);
+      padding: 15px 30px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: fixed;
+      top: 0;
+      width: 100%;
+      z-index: 1000;
+    }
+
+    body.light-mode header {
+      background: rgba(255, 255, 255, 0.8);
+    }
+
+    .logo-img {
+      width: 50px;
+    }
+
+    nav ul {
+      list-style: none;
+      display: flex;
+      gap: 25px;
+    }
+
+    nav ul li a {
+      color: inherit;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 18px;
+    }
+
+    nav ul li a:hover,
+    nav ul li a.active {
+      font-weight: 700;
+      color: var(--accent);
+    }
+
+    main {
+      flex: 1;
+      padding: 120px 20px 40px;
+      max-width: 600px;
+      margin: auto;
+    }
+
+    h1 {
+      font-size: 36px;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      background: rgba(255, 255, 255, 0.05);
+      padding: 30px;
+      border-radius: 10px;
+      max-width: 500px;
+      width: 600px;
+      margin: auto;
+    }
+
+    body.light-mode form {
+      background: rgba(0, 0, 0, 0.05);
+    }
+
+    input, textarea {
+      padding: 12px;
+      border: none;
+      border-radius: 6px;
+      font-size: 16px;
+    }
+
+    button {
+      padding: 12px;
+      background: var(--accent);
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #d81b60;
+    }
+
+    .theme-toggle {
+      cursor: pointer;
+      font-size: 20px;
+    }
+
+    .toast {
+      position: fixed;
+      bottom: 80px;
+      right: 30px;
+      background: #28a745;
+      color: white;
+      padding: 12px 20px;
+      border-radius: 6px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.5s ease;
+    }
+
+    .toast.show {
+      opacity: 1;
+      pointer-events: all;
+    }
+
+    footer {
+      background: #222;
+      color: white;
+      padding: 10px 20px;
+      text-align: center;
+    }
+
+    .social-icons {
+      display: flex;
+      gap: 15px;
+      font-size: 20px;
+      justify-content: center;
+      margin-bottom: 10px;
+    }
+
+    @media (max-width: 768px) {
+      nav ul {
+        flex-direction: column;
+        gap: 10px;
+      }
+
+      main {
+        padding-top: 100px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <img src="logo1.png" alt="Quiz Logo" class="logo-img" />
+  <nav>
+    <ul>
+      <li><a href="index.html">Home</a></li>
+      <li><a href="about.html">About</a></li>
+      <li><a href="contact.html" class="active">Contact</a></li>
+      <li><a href="login.html">Login</a></li>
+    </ul>
+  </nav>
+  <span class="theme-toggle" onclick="toggleTheme()">🌙</span>
+</header>
+
+<main>
+  <h1>Contact Us</h1>
+  <form id="contactForm">
+    <input type="text" name="name" placeholder="Your Name" required />
+    <input type="email" name="email" placeholder="Your Email" required />
+    <textarea name="message" placeholder="Your Message" rows="5" required></textarea>
+    <button type="submit">Send Message</button>
+  </form>
+</main>
+
+<div class="toast" id="toast">Message sent successfully!</div>
+
+<footer>
+  <div class="social-icons">
+    <a href="#"><i class="fab fa-facebook-f" style="color:white;"></i></a>
+    <a href="#"><i class="fab fa-twitter" style="color:white;"></i></a>
+    <a href="#"><i class="fab fa-instagram" style="color:white;"></i></a>
+  </div>
+  <p>© 2025 Quiz App. All rights reserved.</p>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
+<script>
+  AOS.init({ duration: 1000 });
+
+  const toast = document.getElementById("toast");
+  const contactForm = document.getElementById("contactForm");
+
+  contactForm.addEventListener("submit", function (e) {
+    e.preventDefault();
+    const formData = new FormData(contactForm);
+
+    fetch("contact_submit.php", {
+      method: "POST",
+      body: formData
+    }).then(res => res.text()).then(data => {
+      toast.classList.add("show");
+      setTimeout(() => toast.classList.remove("show"), 3000);
+      contactForm.reset();
+    });
+  });
+
+  function toggleTheme() {
+    document.body.classList.toggle("light-mode");
+    document.querySelector(".theme-toggle").textContent =
+      document.body.classList.contains("light-mode") ? "☀️" : "🌙";
+  }
+</script>
+
+</body>
+</html>

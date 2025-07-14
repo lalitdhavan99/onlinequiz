@@ -1,0 +1,60 @@
+	
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Quiz Dashboard</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 0; background: #f4f4f4; }
+    header { background: #2c3e50; color: white; padding: 20px; text-align: center; }
+    .subjects, .results { max-width: 900px; margin: 30px auto; background: white; border-radius: 10px; padding: 20px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
+    h2 { margin-top: 0; }
+    .subject-card {
+      background: #3498db; color: white; padding: 15px;
+      border-radius: 8px; margin-bottom: 15px; cursor: pointer;
+      transition: 0.3s ease;
+    }
+    .subject-card:hover { background: #2980b9; }
+    table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+    th, td { padding: 10px; border-bottom: 1px solid #ccc; text-align: left; }
+    .start-btn {
+      background: #27ae60; color: white; padding: 8px 12px;
+      border: none; border-radius: 5px; float: right; cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>Welcome to Your Quiz Dashboard</h1>
+</header>
+
+<div class="results">
+  <h2>Last 5 Quiz Results</h2>
+  <table id="resultTable">
+    <thead><tr><th>Subject</th><th>Score</th><th>Total</th><th>Date</th></tr></thead>
+    <tbody></tbody>
+  </table>
+</div>
+
+<script>
+  const userId = 1; // Hardcoded for testing, replace with session/user logic
+
+
+  // Load recent results
+  fetch('get_results_user.php?user_id=' + userId)
+    .then(res => res.json())
+    .then(results => {
+      const tbody = document.querySelector("#resultTable tbody");
+      tbody.innerHTML = results.map(r =>
+        `<tr><td>${r.title}</td><td>${r.score}</td><td>${r.total_questions}</td><td>${r.completed_at}</td></tr>`
+      ).join('');
+    });
+
+  function startQuiz(id) {
+    window.location.href = 'quiz.html?quiz_id=' + id;
+  }
+</script>
+
+</body>
+</html>

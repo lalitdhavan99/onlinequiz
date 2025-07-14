@@ -1,0 +1,353 @@
+<?php
+session_start();
+if (!isset($_SESSION['username'])) {
+    header("Location: index.html");
+    exit();
+}
+$username = $_SESSION['username'];
+?>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Quiz Dashboard</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
+  <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+  <style>
+    * {
+      margin: 0; padding: 0; box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: url('homeback.jpg') no-repeat center center fixed;
+      background-size: cover;
+      min-height: 100vh;
+      color: white;
+      overflow-x: hidden;
+      transition: background-color 0.3s, color 0.3s;
+    }
+
+    /* Light theme overrides */
+    body.light-theme {
+      background: #f0f0f0;
+      color: #222;
+      background-image: none;
+    }
+
+    nav {
+      background: rgba(0, 0, 0, 0.6);
+      padding: 10px 30px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      transition: background 0.3s;
+    }
+
+    body.light-theme nav {
+      background: #ffffffcc;
+    }
+
+    .logo-box {
+      background-color: white;
+      padding: 5px 10px;
+      border-radius: 8px;
+    }
+
+    .logo-box img {
+      width: 50px;
+    }
+
+    nav ul.nav1 {
+      list-style: none;
+      display: flex;
+      gap: 30px;
+      align-items: center;
+    }
+
+    nav ul.nav1 li a,
+    nav ul.nav1 li button {
+      color: white;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 16px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      transition: color 0.3s;
+    }
+
+    body.light-theme nav ul.nav1 li a,
+    body.light-theme nav ul.nav1 li button {
+      color: #222;
+    }
+
+    .btn {
+      padding: 10px 20px;
+      font-size: 16px;
+      background-color: #e91e63;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    .btn:hover {
+      background-color: #d81b60;
+    }
+
+    body.light-theme .btn {
+      background-color: #e91e63;
+      color: white;
+    }
+
+    body.light-theme .btn:hover {
+      background-color: #d81b60;
+    }
+
+    /* Dark/Light theme toggle button */
+    .theme-toggle-btn {
+      font-size: 18px;
+      background: none;
+      border: 2px solid white;
+      padding: 6px 12px;
+      border-radius: 6px;
+      color: white;
+      cursor: pointer;
+      transition: background-color 0.3s, border-color 0.3s, color 0.3s;
+    }
+
+    body.light-theme .theme-toggle-btn {
+      border-color: #222;
+      color: #222;
+    }
+
+    .info-box {
+      position: absolute;
+      top: 80px;
+      right: 30px;
+      background: #fff;
+      color: #333;
+      padding: 20px;
+      border-radius: 10px;
+      width: 300px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+      display: none;
+      z-index: 10;
+      transition: background-color 0.3s, color 0.3s;
+    }
+
+    body.light-theme .info-box {
+      background: #eee;
+      color: #222;
+    }
+
+    .info-box h2 {
+      color: #e91e63;
+      margin-bottom: 10px;
+    }
+
+    .main-content {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: calc(100vh - 80px);
+      text-align: center;
+      padding: 0 20px;
+      animation: fadeIn 2s ease-in-out;
+      transition: color 0.3s;
+    }
+
+    .main-content h1 {
+      font-size: 48px;
+      font-weight: 700;
+      margin-bottom: 10px;
+      text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
+    }
+
+    body.light-theme .main-content h1 {
+      text-shadow: none;
+    }
+
+    .main-content p {
+      font-size: 18px;
+      max-width: 600px;
+      margin-bottom: 20px;
+      text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
+    }
+
+    body.light-theme .main-content p {
+      text-shadow: none;
+    }
+
+    .stats {
+      display: flex;
+      gap: 30px;
+      flex-wrap: wrap;
+      margin-top: 30px;
+    }
+
+    .stat-card {
+      background: rgba(255, 255, 255, 0.1);
+      padding: 20px 30px;
+      border-radius: 12px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+      min-width: 200px;
+      text-align: center;
+      backdrop-filter: blur(5px);
+      transition: background-color 0.3s, color 0.3s;
+    }
+
+    body.light-theme .stat-card {
+      background: #fff;
+      color: #222;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      backdrop-filter: none;
+    }
+
+    .stat-card h3 {
+      font-size: 36px;
+      color: #fff;
+    }
+
+    body.light-theme .stat-card h3 {
+      color: #e91e63;
+    }
+
+    .stat-card span {
+      font-size: 16px;
+      color: #ddd;
+    }
+
+    body.light-theme .stat-card span {
+      color: #555;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @media (max-width: 768px) {
+      .main-content h1 {
+        font-size: 32px;
+      }
+      .main-content p {
+        font-size: 16px;
+      }
+      .stats {
+        flex-direction: column;
+        align-items: center;
+      }
+    }
+  </style>
+</head>
+
+<body>
+<nav>
+  <div class="logo-box">
+    <img src="logo1.png" alt="Logo" />
+  </div>
+  <ul class="nav1">
+    <li><a href="javascript:void(0);" onclick="toggleSection('aboutSection')">About</a></li>
+    <li><a href="javascript:void(0);" onclick="toggleSection('contactSection')">Contact</a></li>
+    <li><a href="dashboard.html">Dashboard</a></li>
+    <li><a href="quiz.html"><button class="btn">Get Started</button></a></li>
+    <li><a href="logout.php">Logout</a></li>
+    <li>
+      <button class="theme-toggle-btn" id="themeToggleBtn" aria-label="Toggle dark/light theme">
+        🌙
+      </button>
+    </li>
+  </ul>
+</nav>
+
+<div class="info-box" id="aboutSection">
+  <h2>About</h2>
+  <p>This is a fun and educational quiz platform to test your knowledge and grow your skills interactively!</p>
+</div>
+
+<div class="info-box" id="contactSection">
+  <h2>Contact Us</h2>
+  <p>📧 support@quizapp.com <br /> 📞 +91-12345-67890</p>
+</div>
+
+<div class="main-content">
+  <h1>Welcome, <?php echo htmlspecialchars($username); ?>!</h1>
+  <p>Here is your personalized quiz dashboard. Let’s improve your knowledge every day!</p>
+
+  <div class="stats">
+    <div class="stat-card">
+      <h3>5</h3>
+      <span>Quizzes Taken</span>
+    </div>
+    <div class="stat-card">
+      <h3>80%</h3>
+      <span>Avg. Score</span>
+    </div>
+    <div class="stat-card">
+      <h3>3</h3>
+      <span>Subjects Attempted</span>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Toggle About and Contact info-box sections
+  function toggleSection(id) {
+    const box = document.getElementById(id);
+    const allBoxes = document.querySelectorAll('.info-box');
+    allBoxes.forEach((b) => {
+      if (b.id !== id) b.style.display = 'none';
+    });
+    box.style.display = box.style.display === 'none' || box.style.display === '' ? 'block' : 'none';
+  }
+
+  // Close info-box if clicked outside
+  window.addEventListener('click', function (e) {
+    if (!e.target.closest('.info-box') && !e.target.closest('a')) {
+      document.querySelectorAll('.info-box').forEach((box) => (box.style.display = 'none'));
+    }
+  });
+
+  // Theme toggle logic
+  const themeToggleBtn = document.getElementById('themeToggleBtn');
+  const body = document.body;
+
+  // Load saved theme from localStorage if any
+  const savedTheme = localStorage.getItem('theme');
+  if (savedTheme) {
+    body.classList.toggle('light-theme', savedTheme === 'light');
+    updateToggleBtnIcon();
+  }
+
+  themeToggleBtn.addEventListener('click', () => {
+    body.classList.toggle('light-theme');
+    // Save preference
+    if (body.classList.contains('light-theme')) {
+      localStorage.setItem('theme', 'light');
+    } else {
+      localStorage.setItem('theme', 'dark');
+    }
+    updateToggleBtnIcon();
+  });
+
+  function updateToggleBtnIcon() {
+    if (body.classList.contains('light-theme')) {
+      themeToggleBtn.textContent = '🌙'; // Show moon icon for switching back to dark
+    } else {
+      themeToggleBtn.textContent = '☀️'; // Show sun icon for switching to light
+    }
+  }
+</script>
+</body>
+</html>

@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>About Us - Quiz App</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" rel="stylesheet" />
+  <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+  <style>
+    :root {
+      --bg-light: #f9f9f9;
+      --bg-dark: #121212;
+      --text-light: #000;
+      --text-dark: #fff;
+      --accent: #e91e63;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: var(--bg-dark);
+      color: var(--text-dark);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      transition: background 0.4s, color 0.4s;
+    }
+
+    body.light-mode {
+      background: var(--bg-light);
+      color: var(--text-light);
+    }
+
+    header {
+      background: rgba(0, 0, 0, 0.6);
+      backdrop-filter: blur(10px);
+      padding: 15px 30px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: fixed;
+      top: 0;
+      width: 100%;
+      z-index: 1000;
+    }
+
+    body.light-mode header {
+      background: rgba(255, 255, 255, 0.8);
+    }
+
+    .logo-img {
+      width: 50px;
+    }
+
+    nav ul {
+      list-style: none;
+      display: flex;
+      gap: 25px;
+    }
+
+    nav ul li a {
+      color: inherit;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 18px;
+    }
+
+    nav ul li a:hover,
+    nav ul li a.active {
+      font-weight: 700;
+      color: var(--accent);
+    }
+
+    .theme-toggle {
+      cursor: pointer;
+      font-size: 20px;
+    }
+
+    main {
+      flex: 1;
+      padding: 120px 20px 40px;
+      max-width: 900px;
+      margin: auto;
+    }
+
+    h1 {
+      font-size: 36px;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+
+    p {
+      font-size: 18px;
+      line-height: 1.6;
+      text-align: justify;
+    }
+
+    footer {
+      background: #222;
+      color: white;
+      padding: 10px 450px;
+      text-align: center;
+
+    }
+
+    .social-icons {
+      display: flex;
+      gap: 15px;
+      font-size: 20px;
+      justify-content: center;
+      margin-bottom: 10px;
+    }
+
+    @media (max-width: 768px) {
+      nav ul {
+        flex-direction: column;
+        gap: 10px;
+      }
+
+      main {
+        padding-top: 100px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <img src="logo1.png" alt="Quiz Logo" class="logo-img" />
+  <nav>
+    <ul>
+      <li><a href="index.html">Home</a></li>
+      <li><a href="about.html" class="active">About</a></li>
+      <li><a href="contact.html">Contact</a></li>
+      <li><a href="login.html">Login</a></li>
+    </ul>
+  </nav>
+  <span class="theme-toggle" onclick="toggleTheme()">🌙</span>
+</header>
+
+<main>
+  <h1>About Us</h1>
+  <p data-aos="fade-up">
+    Welcome to Quiz App! Our mission is to make learning engaging and interactive through fun quizzes and challenges. 
+    Whether you're preparing for exams, brushing up on general knowledge, or just enjoying a mental workout, Quiz App provides 
+    a user-friendly platform for all learners.
+  </p>
+  <br>
+  <p data-aos="fade-up" data-aos-delay="200">
+    Our team is passionate about education and technology, and we're constantly working to bring you new features, more quizzes, 
+    and a better user experience. We believe in the power of self-assessment and gamified learning to boost knowledge retention 
+    and confidence.
+  </p>
+</main>
+
+<footer>
+  <div class="social-icons">
+    <a href="#"><i class="fab fa-facebook-f" style="color:white;"></i></a>
+    <a href="#"><i class="fab fa-twitter" style="color:white;"></i></a>
+    <a href="#"><i class="fab fa-instagram" style="color:white;"></i></a>
+  </div>
+  <p>© 2025 Quiz App. All rights reserved.</p>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
+<script>
+  AOS.init({ duration: 1000 });
+
+  function toggleTheme() {
+    document.body.classList.toggle("light-mode");
+    document.querySelector(".theme-toggle").textContent =
+      document.body.classList.contains("light-mode") ? "☀️" : "🌙";
+  }
+</script>
+
+</body>
+</html>
